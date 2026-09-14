@@ -1,0 +1,100 @@
+
+/* ==========cards============== */
+.service-card {
+    width: 135px;
+    height: 160px;
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    background: #fff;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.service-icon {
+    width: 43px;
+    height: 43px;
+    border-radius: 50%;
+    background-color: #fff1d9;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 7px;
+}
+
+.service-icon i {
+    color: #f5a900;
+    font-size: 30px;
+}
+
+.service-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+    text-align: center;
+    margin-bottom: 2px;
+}
+
+.service-price {
+    font-size: 11px;
+    color: #666;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.service-btn {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: none;
+    background-color: #062f35;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.service-btn i {
+    font-size: 12px;
+}
+
+/* get stared button css */
+.get-started-wrapper {
+    text-align: center;
+    margin-top: 45px;
+    padding:35px 20px
+}
+.get-started-wrapper h3{
+    font-size: 25px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 8px;
+}
+.get-started-wrapper p{
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+.started-btn {
+    display: inline-block;
+    padding: 11px 25px;
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+}
+.started-btn:hover {
+    background-color: var(--primary-hover);
+    color: white;
+    transform:translateY(-2px);
+}

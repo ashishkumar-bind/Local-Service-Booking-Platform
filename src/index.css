@@ -1,0 +1,38 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: 'Poppins', sans-serif;
+}
+:root{
+    --primary-color:#087F5B;
+    --primary-hover:#066A4C;
+    --light-green:#E8F7F2;
+    --background-color:#F5FBF9;
+    --dark-text:#102A43;
+    --body-text:#52606D;
+}
+
+.bg-light-green-custom{
+    background-color: var(--light-green);
+}
+
+body{
+    font-family: 'inter', sans-serif;
+    color: var(--dark-text);
+    background-color: var(--background);
+    font-size: 16px;
+    line-height: 1.6;
+}
+h1,h2,h3,h4,h5,h6,span{
+    font-family: 'inter', sans-serif;
+    color: var(--dark-text);
+}
+button,input,select,textarea{
+    font-family: inherit;
+}
+a{
+    text-decoration: none;
+}

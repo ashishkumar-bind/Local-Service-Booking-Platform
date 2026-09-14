@@ -1,0 +1,87 @@
+/* =========================
+   REGISTER PAGE (extends login.css)
+========================= */
+
+/* =========================
+   SELECT FIELD
+========================= */
+
+.login-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1L5 5L9 1' stroke='%23758581' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0 center;
+    padding-right: 18px;
+}
+
+.login-select:invalid {
+    color: #A6B3B0;
+}
+
+/* =========================
+   TERMS CHECKBOX
+========================= */
+
+.terms-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: #526563;
+    font-size: 11.5px;
+    line-height: 1.6;
+    margin-bottom: 22px;
+}
+
+.terms-check input {
+    margin-top: 2px;
+    accent-color: #00856F;
+    flex-shrink: 0;
+}
+
+.terms-check a {
+    color: #00856F;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.terms-check a:hover {
+    color: #005C4B;
+}
+
+/* =========================
+   ADMIN RESTRICTED STATE
+========================= */
+
+.admin-restricted {
+    text-align: center;
+    padding: 12px 0 4px;
+}
+
+.admin-restricted-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 18px;
+    background: #DDF3EC;
+    color: #00856F;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+}
+
+.admin-restricted .login-title {
+    font-size: 20px;
+}
+
+.admin-restricted .login-subtitle {
+    margin-bottom: 26px;
+}
+
+.admin-restricted-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
