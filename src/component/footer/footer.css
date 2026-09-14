@@ -1,5 +1,6 @@
 .footer-section{
-    background-color: #0F3D3E;
+    /* background-color: #0F3D3E; */
+    background-color:var(--primary-color);
     
 }
 

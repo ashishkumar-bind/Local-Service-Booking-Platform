@@ -10,7 +10,7 @@ function Footer() {
           {/* Logo & About */}
           <div className="col-lg-4 col-md-6">
             <h3 className="fw-bold text-white">
-              <i className="bi bi-geo-alt-fill text-success"></i>
+              <i className="bi bi-geo-alt-fill text-white"></i>
               LocalServe
             </h3>
 
@@ -96,17 +96,17 @@ function Footer() {
             <h5 className="fw-bold mb-3 text-white">Contact Us</h5>
 
             <p className="text-secondary mb-2 text-white">
-              <i className="bi bi-geo-alt-fill text-success me-2"></i>
+              <i className="bi bi-geo-alt-fill text-white me-2"></i>
               Delhi NCR, India
             </p>
 
             <p className="text-secondary mb-2 text-white">
-              <i className="bi bi-telephone-fill text-success me-2"></i>
+              <i className="bi bi-telephone-fill text-white me-2"></i>
                 +91 7084479094 & +91 9548600131
             </p>
 
             <p className="text-secondary text-white">
-              <i className="bi bi-envelope-fill text-success me-2"></i>
+              <i className="bi bi-envelope-fill text-white me-2"></i>
               support@localserve.com
             </p>
           </div>
