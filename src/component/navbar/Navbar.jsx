@@ -115,7 +115,7 @@ function Navbar() {
         <div className="d-flex align-items-center gap-2 navbar-col navbar-col-right mt-3 mt-md-0">
           <button
             type="button"
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/login/customer")}
             className="btn btn-outline-success rounded-pill"
           >
             <i className="bi bi-person "></i>
@@ -123,7 +123,7 @@ function Navbar() {
           </button>
           <button
             type="button"
-            onClick={() => navigate("/register")}
+            onClick={() => navigate("/register/customer")}
             className="btn btn-success rounded-pill px-4"
           >
             Sign Up

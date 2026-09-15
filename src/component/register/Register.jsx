@@ -96,7 +96,7 @@ export default function Register() {
                 role="tab"
                 aria-selected={role === key}
                 className={`role-tab ${role === key ? "active" : ""}`}
-                onClick={() => setRole(key)}
+                onClick={() => setRole(key)} 
               >
                 <i className={`bi ${value.icon}`}></i>
                 {value.label}

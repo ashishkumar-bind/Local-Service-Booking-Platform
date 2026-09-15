@@ -72,8 +72,7 @@ export default function Cards() {
           <p>
             Register with us and get trusted professionals at your doorstep.
           </p>
-
-          <Link to="/register" className="btn started-btn">
+          <Link to="/register/customer" className="btn started-btn">
             Get Started
             <i className="bi bi-arrow-right ms-2"></i>
           </Link>

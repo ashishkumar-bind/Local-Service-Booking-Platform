@@ -1,5 +1,6 @@
 import React from "react";
 import "./footer.css";
+import { Link } from "react-router-dom";
 function Footer() {
   return (
     <footer className="footer-section pt-5 pb-3 text-white">
@@ -109,6 +110,14 @@ function Footer() {
               <i className="bi bi-envelope-fill text-white me-2"></i>
               support@localserve.com
             </p>
+          </div>
+
+          {/* Serivce provider button */}
+          <div className="footer-provider">
+            <p>Want to offer your services?</p>
+            <Link to='/register/service-provider' className='provider-btn'>
+            Become a Service Provider
+            </Link>
           </div>
 
         </div>

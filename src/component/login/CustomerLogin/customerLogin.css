@@ -1,0 +1,130 @@
+.customer-login-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5faf7;
+    padding: 30px 15px;
+}
+
+.customer-login-card {
+    width: 100%;
+    max-width: 430px;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.customer-login-header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.customer-login-header h2 {
+    color: #087443;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.customer-login-header p {
+    color: #777;
+    font-size: 14px;
+}
+
+.customer-form-group {
+    margin-bottom: 18px;
+}
+
+.customer-form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 7px;
+}
+
+.customer-form-group input {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid #d7d7d7;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.customer-form-group input:focus {
+    border-color: #087443;
+    box-shadow: 0 0 0 2px rgba(8, 116, 67, 0.08);
+}
+
+.customer-login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    margin: 5px 0 22px;
+}
+
+.customer-login-options label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.customer-login-options a {
+    color: #087443;
+    text-decoration: none;
+}
+
+.customer-login-options a:hover {
+    text-decoration: underline;
+}
+
+.customer-login-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background: #087443;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.customer-login-btn:hover {
+    background: #065c35;
+}
+
+.customer-register-text {
+    text-align: center;
+    margin-top: 20px;
+    color: #777;
+    font-size: 13px;
+}
+
+.customer-register-text a {
+    margin-left: 5px;
+    color: #087443;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.customer-register-text a:hover {
+    text-decoration: underline;
+}
+
+.customer-back {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.customer-back a {
+    color: #087443;
+    text-decoration: none;
+    font-size: 13px;
+}

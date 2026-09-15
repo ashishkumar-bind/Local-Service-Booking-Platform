@@ -97,3 +97,28 @@
 .contact-btn:hover {
   background-color: #056b4c;
 }
+
+/* service provider button */
+.footer-provider{
+  margin-top: 18px;
+}
+.footer-provider p{
+  font-size: 17px;
+  margin-bottom: 8px;
+  color: white;
+}
+.provider-btn{
+  display: inline-block;
+  padding: 7px 13px;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+.provider-btn:hover{
+  background-color: #ffffff;
+  color: #056b4c;
+}
