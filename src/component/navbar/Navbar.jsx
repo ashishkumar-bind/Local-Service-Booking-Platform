@@ -123,11 +123,11 @@ function Navbar() {
           </button>
           <button
             type="button"
-            onClick={() => navigate("/register")}
-            className="btn btn-success rounded-pill px-4"
+            onClick={() => navigate("/register/provider")}
+            className="btn btn-success "
           >
-            Sign Up
-          </button>
+            Become a Provider    
+            </button>
         </div>
       </div>
     </nav>

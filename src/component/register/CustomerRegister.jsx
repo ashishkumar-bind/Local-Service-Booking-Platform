@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import '../login/Login.css';
 import "./Register.css";
 
@@ -12,34 +12,12 @@ const ROLES = {
       "Book trusted local pros in minutes, track your service history, and pay securely.",
     badge: { icon: "bi-star-fill", title: "4.9", note: "Average pro rating" },
   },
-  provider: {
-    label: "Service Provider",
-    icon: "bi-tools",
-    heading: "List your services, meet new customers.",
-    subtext:
-      "Set your rates, manage your schedule, and grow your local business with LocalServe.",
-    badge: { icon: "bi-briefcase-fill", title: "12,000+", note: "Active pros on LocalServe" },
-  },
-  admin: {
-    label: "Admin",
-    icon: "bi-shield-lock",
-    heading: "Admin control center.",
-    subtext: "Oversee providers, bookings, disputes and platform activity from one dashboard.",
-    badge: { icon: "bi-shield-check", title: "Restricted", note: "Authorized staff only" },
-  },
 };
 
-const SERVICE_CATEGORIES = [
-  "Electrician",
-  "Plumber",
-  "Carpenter",
-  "Painter",
-  "Cleaner",
-  "Other",
-];
 
-export default function Register() {
-  const [role, setRole] = useState("user");
+export default function CustomerRegister() {
+  const navigate = useNavigate();
+  const [role] = useState("user");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const active = ROLES[role];
@@ -48,6 +26,7 @@ export default function Register() {
     e.preventDefault();
     // Hook up to your signup logic here, keyed by `role`
     console.log("Registering as:", role);
+    navigate("/Dashboard");
   };
 
   return (
@@ -86,23 +65,6 @@ export default function Register() {
           <Link to="/" className="login-logo login-logo-mobile d-lg-none">
             <i className="bi bi-geo-alt-fill"></i> LocalServe
           </Link>
-
-          {/* Role switcher */}
-          <div className="role-switch" role="tablist" aria-label="Choose account type">
-            {Object.entries(ROLES).map(([key, value]) => (
-              <button
-                key={key}
-                type="button"
-                role="tab"
-                aria-selected={role === key}
-                className={`role-tab ${role === key ? "active" : ""}`}
-                onClick={() => setRole(key)}
-              >
-                <i className={`bi ${value.icon}`}></i>
-                {value.label}
-              </button>
-            ))}
-          </div>
 
           {role === "admin" ? (
             /* ===== Admin: no self-registration ===== */

@@ -1,12 +1,11 @@
 import React from "react";
 import "./footer.css";
+import { Link } from "react-router-dom";
 function Footer() {
   return (
     <footer className="footer-section pt-5 pb-3 text-white">
       <div className="container">
-
         <div className="row g-4">
-
           {/* Logo & About */}
           <div className="col-lg-4 col-md-6">
             <h3 className="fw-bold text-white">
@@ -15,13 +14,16 @@ function Footer() {
             </h3>
 
             <p className="text-secondary mt-3 text-white">
-              Find trusted local professionals for your everyday needs.
-              Simple, reliable and convenient service booking.
+              Find trusted local professionals for your everyday needs. Simple,
+              reliable and convenient service booking.
             </p>
 
             <div className="d-flex gap-3 mt-4 ">
               <a href="#" className="footer-icon text-white">
-                <i className="bi bi-facebook"></i>
+                <i
+                  className="bi bi-facebook "
+                  aria-label="Follow us on Facebook"
+                ></i>
               </a>
 
               <a href="#" className="footer-icon text-white">
@@ -49,7 +51,9 @@ function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#services" className="text-white">Services</a>
+                <a href="#services" className="text-white">
+                  Services
+                </a>
               </li>
               <li>
                 <a href="#works-section" className="text-white">
@@ -62,7 +66,9 @@ function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#contact-section" className="text-white">Contact</a>
+                <a href="#contact-section" className="text-white">
+                  Contact
+                </a>
               </li>
             </ul>
           </div>
@@ -73,20 +79,24 @@ function Footer() {
 
             <ul className="list-unstyled footer-links">
               <li>
-                <a href="/login" className="text-white">Login</a>
-              </li>
-              <li>
-                <a href="/register" className="text-white">Register</a>
-              </li>
-              <li>
-                <a href="#services" className="text-white">
-                  Book a Service
+                <a href="/login" className="text-white">
+                  Login
                 </a>
               </li>
               <li>
-                <a href="#" className="text-white">
-                  My Bookings
+                <a href="/register" className="text-white">
+                  Register
                 </a>
+              </li>
+              <li>
+                <Link to="/login/admin" className="text-white">
+                  Admin
+                </Link>
+              </li>
+              <li>
+                <Link to="/register/provider" className="text-white">
+                  Become a Provider
+                </Link>
               </li>
             </ul>
           </div>
@@ -102,22 +112,29 @@ function Footer() {
 
             <p className="text-secondary mb-2 text-white">
               <i className="bi bi-telephone-fill text-white me-2"></i>
-                +91 7084479094 & +91 9548600131
+              {/* +91 7084479094 & +91 9548600131 */}
+              <a href="tel:+917084479094" className="text-white">
+                +91 7084479094
+              </a>{" "}
+              &{" "}
+              <a href="tel:+919548600131" className="text-white">
+                +91 9548600131
+              </a>
             </p>
 
             <p className="text-secondary text-white">
               <i className="bi bi-envelope-fill text-white me-2"></i>
-              support@localserve.com
+              <a href="mailto:support@localserve.com" className="text-white">
+                support@localserve.com
+              </a>
             </p>
           </div>
-
         </div>
 
         <hr className="my-4 text-white" />
 
         {/* Bottom */}
         <div className="row align-items-center">
-
           <div className="col-md-6 text-center text-md-start">
             <p className="text-secondary mb-2 mb-md-0 text-white">
               © 2026 LocalServe. All rights reserved.
@@ -126,16 +143,14 @@ function Footer() {
 
           <div className="col-md-6 text-center text-md-end">
             <a href="#" className="footer-bottom-link  me-1 text-white">
-              Privacy Policy |
+              Privacy Policy
             </a>
 
             <a href="#" className="footer-bottom-link text-white">
               Terms & Conditions
             </a>
           </div>
-
         </div>
-
       </div>
     </footer>
   );
