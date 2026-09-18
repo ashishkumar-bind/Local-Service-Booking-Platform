@@ -1,6 +1,7 @@
 import React from "react";
 import "./footer.css";
 import { Link } from "react-router-dom";
+
 function Footer() {
   return (
     <footer className="footer-section pt-5 pb-3 text-white">
@@ -18,12 +19,9 @@ function Footer() {
               reliable and convenient service booking.
             </p>
 
-            <div className="d-flex gap-3 mt-4 ">
+            <div className="d-flex gap-3 mt-4">
               <a href="#" className="footer-icon text-white">
-                <i
-                  className="bi bi-facebook "
-                  aria-label="Follow us on Facebook"
-                ></i>
+                <i className="bi bi-facebook"></i>
               </a>
 
               <a href="#" className="footer-icon text-white">
@@ -50,21 +48,25 @@ function Footer() {
                   Home
                 </a>
               </li>
+
               <li>
                 <a href="#services" className="text-white">
                   Services
                 </a>
               </li>
+
               <li>
                 <a href="#works-section" className="text-white">
                   How It Works
                 </a>
               </li>
+
               <li>
                 <a href="#about-section" className="text-white">
                   About
                 </a>
               </li>
+
               <li>
                 <a href="#contact-section" className="text-white">
                   Contact
@@ -83,16 +85,19 @@ function Footer() {
                   Login
                 </a>
               </li>
+
               <li>
                 <a href="/register" className="text-white">
                   Register
                 </a>
               </li>
+
               <li>
                 <Link to="/login/admin" className="text-white">
                   Admin
                 </Link>
               </li>
+
               <li>
                 <Link to="/register/provider" className="text-white">
                   Become a Provider
@@ -112,11 +117,13 @@ function Footer() {
 
             <p className="text-secondary mb-2 text-white">
               <i className="bi bi-telephone-fill text-white me-2"></i>
-              {/* +91 7084479094 & +91 9548600131 */}
+
               <a href="tel:+917084479094" className="text-white">
                 +91 7084479094
-              </a>{" "}
-              &{" "}
+              </a>
+
+              {" & "}
+
               <a href="tel:+919548600131" className="text-white">
                 +91 9548600131
               </a>
@@ -124,10 +131,20 @@ function Footer() {
 
             <p className="text-secondary text-white">
               <i className="bi bi-envelope-fill text-white me-2"></i>
+
               <a href="mailto:support@localserve.com" className="text-white">
                 support@localserve.com
               </a>
             </p>
+          </div>
+
+          {/* Service Provider Button */}
+          <div className="footer-provider">
+            <p>Want to offer your services?</p>
+
+            <Link to="/register/service-provider" className="provider-btn">
+              Become a Service Provider
+            </Link>
           </div>
         </div>
 
@@ -142,7 +159,7 @@ function Footer() {
           </div>
 
           <div className="col-md-6 text-center text-md-end">
-            <a href="#" className="footer-bottom-link  me-1 text-white">
+            <a href="#" className="footer-bottom-link me-1 text-white">
               Privacy Policy
             </a>
 
