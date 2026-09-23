@@ -112,7 +112,7 @@ export default function Login() {
 
           <p className="login-footer-text">
             New to LocalServe?{" "}
-            <Link to="/register">Create an account</Link>
+            <Link to="/register/customer">Create an account</Link>
           </p>
         </div>
       </div>

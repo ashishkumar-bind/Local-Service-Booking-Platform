@@ -116,22 +116,10 @@ function CustomerDashboard() {
         </div>
 
         <nav className="dashboard-menu">
-          {/* <Link to="/customer-dashboard" className="active">
-            <i className="bi bi-grid"></i>
-            Dashboard
-          </Link> */}
-          {/* <Link to="/services">
-            <i className="bi bi-search"></i>
-            Find Services
-          </Link> */}
           <Link to="/my-bookings">
             <i className="bi bi-calendar-check"></i>
             My Bookings
           </Link>
-          {/* <Link to="/favorites">
-            <i className="bi bi-heart"></i>
-            Favorites
-          </Link> */}
           <Link to="/messages">
             <i className="bi bi-chat-dots"></i>
             Booking Status

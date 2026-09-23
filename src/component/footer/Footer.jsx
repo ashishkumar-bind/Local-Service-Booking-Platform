@@ -137,15 +137,6 @@ function Footer() {
               </a>
             </p>
           </div>
-
-          {/* Service Provider Button */}
-          <div className="footer-provider">
-            <p>Want to offer your services?</p>
-
-            <Link to="/register/service-provider" className="provider-btn">
-              Become a Service Provider
-            </Link>
-          </div>
         </div>
 
         <hr className="my-4 text-white" />

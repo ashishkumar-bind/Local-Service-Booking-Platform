@@ -10,11 +10,6 @@ import CustomerDashboard from "../../Dashboard/CustomerDashboard";
 import ProviderDashboard from "../../Dashboard/ProviderDashboard";
 import AdminDashboard from "../../Dashboard/AdminDashboard";
 
-import CustomerRegisterNew from "../register/CustomerRegister/CustomerRegister";
-import ServiceProviderRegister from "../register/ServiceProviderRegstration/ServiceProviderRegistration";
-import AdminLoginNew from "../login/AdminLogin/AdminLogin";
-import CustomerLoginNew from "../login/CustomerLogin/CustomerLogin";
-import ServiceProviderLogin from "../login/ServiceProviderLogin/ServiceProviderLogin";
 
 export default function RoutePath() {
   return (
@@ -23,8 +18,8 @@ export default function RoutePath() {
         <Routes>
           <Route path="/" element={<Home />} />
 
-          <Route path="/login" element={<CustomerLogin />} />
-          <Route path="/register" element={<CustomerRegister />} />
+          <Route path="/login/customer" element={<CustomerLogin />} />
+          <Route path="/register/customer" element={<CustomerRegister />} />
 
           <Route path="/login/provider" element={<ProviderLogin />} />
           <Route path="/register/provider" element={<ProviderRegister />} />
@@ -33,18 +28,6 @@ export default function RoutePath() {
           <Route path="/Dashboard" element={<CustomerDashboard />} />
           <Route path="/Dashboard/provider" element={<ProviderDashboard />} />
           <Route path="/Dashboard/admin" element={<AdminDashboard />} />
-
-          <Route path="/register/customer" element={<CustomerRegisterNew />} />
-          <Route
-            path="/register/service-provider"
-            element={<ServiceProviderRegister />}
-          />
-          <Route path="/login/admin" element={<AdminLoginNew />} />
-          <Route path="/login/customer" element={<CustomerLoginNew />} />
-          <Route
-            path="/login/service-provider-login"
-            element={<ServiceProviderLogin />}
-          />
 
           {/* <Route path="/card" element={<Cards />} /> */}
         </Routes>

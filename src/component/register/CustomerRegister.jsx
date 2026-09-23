@@ -186,7 +186,7 @@ export default function CustomerRegister() {
 
           <p className="login-footer-text">
             Already have an account?{" "}
-            <Link to="/login">Log in</Link>
+            <Link to="/login/customer">Log in</Link>
           </p>
 
         </div>
