@@ -18,7 +18,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar navbar-expand-md bg-white shadow-sm">
+    <nav className="navbar navbar-expand-md navbar-overlay">
       <div className="container d-flex align-items-center">
 
         {/* Logo */}
@@ -112,13 +112,14 @@ function Navbar() {
             onClick={() => navigate("/login/customer")}
             className="btn btn-outline-success rounded-pill"
           >
-            <i className="bi bi-person"></i>
+            {/* <i className="bi bi-person"></i> */}
+            Login
           </button>
 
           <button
             type="button"
             onClick={() => navigate("/register/provider")}
-            className="btn btn-success rounded-pill px-4"
+            className="btn btn-success become-provider rounded-pill px-4"
           >
             Become a Provider
           </button>

@@ -6,29 +6,25 @@ const services = [
   {
     title: "Electrician",
     price: "₹199",
-    icon: "bi-lightning-charge-fill",
-    color: "",
+    img: "/electrician.jpg",
   },
   {
     title: "Plumber",
     price: "₹249",
-    icon: "bi-wrench-adjustable",
-    color: "text-primary fs-5",
+    img: "/Plumber.jpg",
   },
   {
     title: "Carpenter",
     price: "₹299",
-    icon: "bi-hammer",
-    color: "text-danger",
+    img: "/carpenter.jpg",
   },
   {
     title: "Cleaning",
     price: "₹299",
-    icon: "bi-bucket",
-    color: "text-success",
+    img: "/cleaning.jpg",
   },
-  { title: "Painter", price: "₹399", icon: "bi-brush", color: "text-warning" },
-  { title: "AC Repair", price: "₹349", icon: "bi-snow", color: "text-success" },
+  { title: "Painter", price: "₹399", img: "/painter.jpg" },
+  { title: "AC Repair", price: "₹349", img: "/ACRepaire.jpg" },
 ];
 
 export default function Cards() {
@@ -36,9 +32,9 @@ export default function Cards() {
     // <!-- card section----------------- -->
     <section id="services">
       <div className="container mt-5">
-        <p className="text-success border border-success-subtle rounded-pill px-2 py-0 d-inline-block fw-bold">
+        {/* <p className="text-success border border-success-subtle rounded-pill px-2 py-0 d-inline-block fw-bold">
           OUR SERVICES
-        </p>
+        </p> */}
         <h2 className="fw-bold">Popular Services</h2>
 
         <p>
@@ -48,26 +44,22 @@ export default function Cards() {
       </div>
 
       <div className="container mt-3">
-        <div className="row gx-*">
+        <div className="row">
           {services.map((s, i) => (
             <div className="col" key={i}>
-              <div className="service-card">
-                <div className="service-icon">
-                  <i className={`bi ${s.icon} ${s.color}`}></i>
+              <div className="card text-bg-dark service-card-overlay">
+                <img src={s.img} className="card-img" alt={s.title} />
+                <div className="card-img-overlay d-flex flex-column justify-content-end">
+                  <h5 className="card-title fw-bold">{s.title}</h5>
+                  <p className="card-text mb-0">From {s.price}</p>
                 </div>
-                <div className="service-title fw-bold p-2">{s.title}</div>
-                <div className="service-price fw-bold">From {s.price}</div>
-                {/* <button className="btn btn-success fw-bold">
-                  <i className="bi bi-arrow-right"></i>
-                  
-                </button> */}
               </div>
             </div>
           ))}
         </div>
 
         {/* Get Started Button */}
-        <div className="get-started-wrapper">
+        <div className="get-started-wrapper pt-0">
           <h3>Need a service?</h3>
           <p>
             Register with us and get trusted professionals at your doorstep.

@@ -1,13 +1,14 @@
 
 import './App.css'
-import CustomerDashboard from './Dashboard/CustomerDashboard'
 import RoutePath from './component/routes/RoutePath'
+import Chatbox from './chatbox/Chatbox';
 
 function App() {
 
   return (
     <>
      <RoutePath />
+     <Chatbox />
     </>
   )
 }
