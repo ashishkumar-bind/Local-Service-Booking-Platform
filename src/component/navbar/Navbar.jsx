@@ -28,7 +28,7 @@ function Navbar() {
             to="/"
             onClick={() => scrollToSection("hero-section")}
           >
-            LocalServe.
+            LocalServe
           </Link>
         </div>
 

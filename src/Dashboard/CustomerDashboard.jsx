@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./customerDashboard.css";
 
 // Dummy data — baad mein API se replace kar sakte hain
@@ -86,7 +86,18 @@ const CATEGORIES = [
 const TOTAL_BOOKINGS = 12; // baad mein API se aayega
 
 function CustomerDashboard() {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState(null);
+
+  // Real logged-in user (localStorage me signup/login ke time save hua tha)
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const displayName = user?.name || "Guest";
+  const avatarLetter = displayName.charAt(0).toUpperCase();
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/");
+  };
 
   const handleCategoryClick = (categoryName) => {
     setSelectedCategory((prev) =>
@@ -109,9 +120,9 @@ function CustomerDashboard() {
         </div>
 
         <div className="customer-info">
-          <div className="customer-avatar">A</div>
+          <div className="customer-avatar">{avatarLetter}</div>
           <div>
-            <h6>Welcome! ashish</h6>
+            <h6>Welcome! {displayName}</h6>
           </div>
         </div>
 
@@ -139,7 +150,7 @@ function CustomerDashboard() {
             <i className="bi bi-question-circle"></i>
             Help & Support
           </Link>
-          <button className="logout-btn">
+          <button className="logout-btn" onClick={handleLogout}>
             <i className="bi bi-box-arrow-right"></i>
             Logout
           </button>
@@ -170,9 +181,9 @@ function CustomerDashboard() {
             </button>
 
             <div className="top-profile">
-              <div className="customer-avatar small">A</div>
+              <div className="customer-avatar small">{avatarLetter}</div>
               <div>
-                <strong>Ashish </strong>
+                <strong>{displayName}</strong>
               </div>
             </div>
           </div>
@@ -407,7 +418,7 @@ function CustomerDashboard() {
               <span>Help & Support</span>
             </Link>
 
-            <button className="logout-btn">
+            <button className="logout-btn" onClick={handleLogout}>
               <i className="bi bi-box-arrow-right"></i>
               <span>Logout</span>
             </button>

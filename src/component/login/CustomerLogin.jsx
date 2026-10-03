@@ -1,13 +1,53 @@
 import { useState } from "react";
 import "./Login.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+const API = "http://localhost:8080/api/auth";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Logging in as customer");
+    setError("");
+
+    if (!form.email || !form.password) {
+      return setError("Please enter your email and password");
+    }
+
+    try {
+      setLoading(true);
+      const res = await fetch(`${API}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Login failed");
+
+      localStorage.setItem("user", JSON.stringify(data)); // id, name, email
+      navigate("/Dashboard");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -64,9 +104,12 @@ export default function Login() {
               <i className="bi bi-envelope"></i>
               <input
                 id="identifier"
+                name="email"
                 type="text"
                 placeholder="you@example.com"
                 className="login-input"
+                value={form.email}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -78,9 +121,12 @@ export default function Login() {
               <i className="bi bi-lock"></i>
               <input
                 id="password"
+                name="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 className="login-input"
+                value={form.password}
+                onChange={handleChange}
                 required
               />
               <button
@@ -105,8 +151,12 @@ export default function Login() {
               </a>
             </div>
 
-            <button type="submit" className="login-submit">
-              Log in
+            {error && (
+              <p style={{ color: "red", margin: "10px 0" }}>{error}</p>
+            )}
+
+            <button type="submit" className="login-submit" disabled={loading}>
+              {loading ? "Logging in..." : "Log in"}
             </button>
           </form>
 

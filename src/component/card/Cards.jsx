@@ -32,10 +32,7 @@ export default function Cards() {
     // <!-- card section----------------- -->
     <section id="services">
       <div className="container mt-5">
-        {/* <p className="text-success border border-success-subtle rounded-pill px-2 py-0 d-inline-block fw-bold">
-          OUR SERVICES
-        </p> */}
-        <h2 className="fw-bold">Popular Services</h2>
+        <h2 className="fw-bold">Our Services</h2>
 
         <p>
           Choose from a wide range of services and get the best professionals

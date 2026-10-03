@@ -50,11 +50,11 @@ function HeroSection() {
         </div>
 
         {/* Professional Image - right side, positioned via CSS */}
-        <img
-          src="/Handyma.png"
+        {/* <img
+          src="/Handyman.png"
           alt="Professional"
           className="hero-professional-img"
-        />
+        /> */}
       </div>
     </section>
   );

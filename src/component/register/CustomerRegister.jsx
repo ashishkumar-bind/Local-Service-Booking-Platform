@@ -1,8 +1,9 @@
-
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../login/Login.css";
 import "./Register.css";
+
+const API = "http://localhost:8080/api/auth";
 
 const ROLES = {
   user: {
@@ -25,17 +26,64 @@ export default function CustomerRegister() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+    agree: false,
+  });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const active = ROLES[role];
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm((f) => ({ ...f, [name]: type === "checkbox" ? checked : value }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Registering as:", role);
-    navigate("/Dashboard");
+    setError("");
+
+    if (!form.name || !form.email || !form.password) {
+      return setError("Please fill all required fields");
+    }
+    if (form.password !== form.confirmPassword) {
+      return setError("Passwords do not match");
+    }
+    if (!form.agree) {
+      return setError("Please accept the Terms and Privacy Policy");
+    }
+
+    try {
+      setLoading(true);
+      const res = await fetch(`${API}/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          password: form.password,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Signup failed");
+
+      localStorage.setItem("user", JSON.stringify(data));
+      navigate("/Dashboard");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="login-page d-flex align-items-stretch flex-column flex-lg-row">
-
       {/* Brand / Context Panel */}
       <div className="login-visual d-none d-lg-flex flex-column justify-content-between">
         <Link to="/" className="login-logo">
@@ -68,7 +116,6 @@ export default function CustomerRegister() {
       {/* Form Panel */}
       <div className="login-form-panel d-flex align-items-center justify-content-center">
         <div className="login-card">
-
           <Link to="/" className="login-logo login-logo-mobile d-lg-none">
             <i className="bi bi-geo-alt-fill"></i> LocalServe
           </Link>
@@ -80,7 +127,6 @@ export default function CustomerRegister() {
           </p>
 
           <form onSubmit={handleSubmit} noValidate>
-
             <label className="field-label" htmlFor="fullname">
               Full name
             </label>
@@ -90,26 +136,50 @@ export default function CustomerRegister() {
 
               <input
                 id="fullname"
+                name="name"
                 type="text"
                 placeholder="Your full name"
                 className="login-input"
+                value={form.name}
+                onChange={handleChange}
                 required
               />
             </div>
 
-            <label className="field-label" htmlFor="identifier">
-              Email or phone number
+            <label className="field-label" htmlFor="email">
+              Email
             </label>
 
             <div className="input-wrap">
               <i className="bi bi-envelope"></i>
 
               <input
-                id="identifier"
-                type="text"
+                id="email"
+                name="email"
+                type="email"
                 placeholder="you@example.com"
                 className="login-input"
+                value={form.email}
+                onChange={handleChange}
                 required
+              />
+            </div>
+
+            <label className="field-label" htmlFor="phone">
+              Phone number
+            </label>
+
+            <div className="input-wrap">
+              <i className="bi bi-telephone"></i>
+
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                placeholder="9999999999"
+                className="login-input"
+                value={form.phone}
+                onChange={handleChange}
               />
             </div>
 
@@ -122,9 +192,12 @@ export default function CustomerRegister() {
 
               <input
                 id="password"
+                name="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Create a password"
                 className="login-input"
+                value={form.password}
+                onChange={handleChange}
                 required
               />
 
@@ -135,9 +208,7 @@ export default function CustomerRegister() {
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 <i
-                  className={`bi ${
-                    showPassword ? "bi-eye-slash" : "bi-eye"
-                  }`}
+                  className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}
                 ></i>
               </button>
             </div>
@@ -151,9 +222,12 @@ export default function CustomerRegister() {
 
               <input
                 id="confirm-password"
+                name="confirmPassword"
                 type={showConfirm ? "text" : "password"}
                 placeholder="Re-enter your password"
                 className="login-input"
+                value={form.confirmPassword}
+                onChange={handleChange}
                 required
               />
 
@@ -164,34 +238,35 @@ export default function CustomerRegister() {
                 aria-label={showConfirm ? "Hide password" : "Show password"}
               >
                 <i
-                  className={`bi ${
-                    showConfirm ? "bi-eye-slash" : "bi-eye"
-                  }`}
+                  className={`bi ${showConfirm ? "bi-eye-slash" : "bi-eye"}`}
                 ></i>
               </button>
             </div>
 
             <label className="terms-check">
-              <input type="checkbox" required />
-
-              I agree to the{" "}
-              <a href="/terms">Terms of Service</a> and{" "}
+              <input
+                type="checkbox"
+                name="agree"
+                checked={form.agree}
+                onChange={handleChange}
+                required
+              />
+              I agree to the <a href="/terms">Terms of Service</a> and{" "}
               <a href="/privacy">Privacy Policy</a>
             </label>
 
-            <button type="submit" className="login-submit">
-              Create account
+            {error && <p style={{ color: "red", margin: "10px 0" }}>{error}</p>}
+
+            <button type="submit" className="login-submit" disabled={loading}>
+              {loading ? "Creating..." : "Create account"}
             </button>
           </form>
 
           <p className="login-footer-text">
-            Already have an account?{" "}
-            <Link to="/login/customer">Log in</Link>
+            Already have an account? <Link to="/login/customer">Log in</Link>
           </p>
-
         </div>
       </div>
     </div>
   );
 }
-
