@@ -1,13 +1,53 @@
 import { useState } from "react";
 import "./Login.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+const API = "http://localhost:8080/api/provider";
 
 export default function ProviderLogin() {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Logging in as service provider");
+    setError("");
+
+    if (!form.email || !form.password) {
+      return setError("Please enter your email and password");
+    }
+
+    try {
+      setLoading(true);
+      const res = await fetch(`${API}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Login failed");
+
+      // backend response: { id, name, email }
+      // customer ke "user" se alag rakhne ke liye "provider" key use ki hai
+      // dashboard isi "id" se profile load karta hai
+      localStorage.setItem("provider", JSON.stringify(data));
+      navigate("/Dashboard/Provider");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -59,9 +99,9 @@ export default function ProviderLogin() {
           </p>
 
           <form onSubmit={handleSubmit} noValidate>
-            {/* Email / Phone */}
+            {/* Email */}
             <label className="field-label" htmlFor="providerEmail">
-              Email or phone number
+              Email address
             </label>
 
             <div className="input-wrap">
@@ -69,9 +109,12 @@ export default function ProviderLogin() {
 
               <input
                 id="providerEmail"
-                type="text"
+                name="email"
+                type="email"
                 placeholder="you@business.com"
                 className="login-input"
+                value={form.email}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -86,9 +129,12 @@ export default function ProviderLogin() {
 
               <input
                 id="providerPassword"
+                name="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 className="login-input"
+                value={form.password}
+                onChange={handleChange}
                 required
               />
 
@@ -116,9 +162,13 @@ export default function ProviderLogin() {
               </Link>
             </div>
 
+            {error && (
+              <p style={{ color: "red", margin: "10px 0" }}>{error}</p>
+            )}
+
             {/* Login */}
-            <button type="submit" className="login-submit">
-              Log in as Provider
+            <button type="submit" className="login-submit" disabled={loading}>
+              {loading ? "Logging in..." : "Log in as Provider"}
             </button>
           </form>
 
@@ -127,7 +177,6 @@ export default function ProviderLogin() {
             New to LocalServe?{" "}
             <Link to="/register/provider">Register as a Provider</Link>
           </p>
-          
         </div>
       </div>
     </div>

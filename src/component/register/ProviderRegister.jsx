@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "../login/Login.css";
-import { useNavigate,Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
+const API = "http://localhost:8080/api/provider";
 
 const SERVICE_CATEGORIES = [
   "Electrician",
@@ -14,11 +16,10 @@ const SERVICE_CATEGORIES = [
 ];
 
 export default function ProviderRegister() {
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
-    businessName: "",
     fullName: "",
     email: "",
     phone: "",
@@ -27,7 +28,10 @@ export default function ProviderRegister() {
     password: "",
     confirmPassword: "",
   });
+  const [agreed, setAgreed] = useState(false);
   const [passwordError, setPasswordError] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -46,8 +50,20 @@ export default function ProviderRegister() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+
+    if (
+      !formData.fullName ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.category ||
+      !formData.city ||
+      !formData.password
+    ) {
+      return setError("Please fill all the fields");
+    }
 
     if (formData.password !== formData.confirmPassword) {
       setPasswordError("Passwords do not match");
@@ -60,8 +76,36 @@ export default function ProviderRegister() {
     }
 
     setPasswordError("");
-    console.log("Registering provider:", formData);
-    navigate("/Dashboard/Provider");
+
+    if (!agreed) {
+      return setError("Please accept the Terms & Conditions");
+    }
+
+    try {
+      setLoading(true);
+      const res = await fetch(`${API}/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.fullName, // backend me field ka naam "name" hai
+          email: formData.email,
+          phone: formData.phone,
+          category: formData.category,
+          city: formData.city,
+          password: formData.password,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Registration failed");
+
+      console.log("Registered:", data); // { id, name, email }
+      navigate("/login/provider");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -111,7 +155,6 @@ export default function ProviderRegister() {
           </p>
 
           <form onSubmit={handleSubmit} noValidate>
-           
             <label className="field-label" htmlFor="fullName">
               Your full name
             </label>
@@ -269,13 +312,21 @@ export default function ProviderRegister() {
 
             <div className="login-row">
               <label className="remember-me">
-                <input type="checkbox" required />I agree to the{" "}
-                <a href="/terms">Terms &amp; Conditions</a>
+                <input
+                  type="checkbox"
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                />
+                I agree to the <a href="/terms">Terms &amp; Conditions</a>
               </label>
             </div>
 
-            <button type="submit" className="login-submit">
-              Register as Provider
+            {error && (
+              <p style={{ color: "red", margin: "10px 0" }}>{error}</p>
+            )}
+
+            <button type="submit" className="login-submit" disabled={loading}>
+              {loading ? "Registering..." : "Register as Provider"}
             </button>
           </form>
 

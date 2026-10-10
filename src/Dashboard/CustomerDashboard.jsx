@@ -75,12 +75,14 @@ const PROVIDERS_DATA = {
 };
 
 const CATEGORIES = [
-  { name: "Electrician", icon: "bi-lightning-charge", count: 18 },
-  { name: "Plumber", icon: "bi-droplet", count: 21 },
-  { name: "Cleaning", icon: "bi-house", count: 32 },
-  { name: "Car Service", icon: "bi-car-front", count: 15 },
-  { name: "AC", icon: "bi-fan", count: 27 },
-  { name: "Bike Repair", icon: "bi-tools", count: 24 },
+  { name: "Electrician", count: 18, price: "₹249", img: "/electrician.jpg" },
+  { name: "Plumber", count: 21, price: "249", img: "/Plumber.jpg" },
+  { name: "Carpenter", count: 10, price: "₹299", img: "/carpenter.jpg" },
+  { name: "Cleaning", count: 32, price: "₹299", img: "/cleaning.jpg" },
+  { name: "Car Service", count: 15, price: "399", img: "/CarS.jpeg" },
+  { name: "AC Repair", count: 27, price: "₹349", img: "/ACRepaire.jpg" },
+  { name: "Painter", count: 12, price: "₹399", img: "/painter.jpg" },
+  { name: "Bike Repair", count: 24, price: "₹199", img: "/BikeR.jpg" },
 ];
 
 const TOTAL_BOOKINGS = 12; // baad mein API se aayega
@@ -215,7 +217,9 @@ function CustomerDashboard() {
             {CATEGORIES.map((cat) => (
               <div
                 key={cat.name}
-                className={`category-card ${selectedCategory === cat.name ? "active" : ""}`}
+                className={`category-card card text-bg-dark ${
+                  selectedCategory === cat.name ? "active" : ""
+                }`}
                 role="button"
                 tabIndex={0}
                 onClick={() => handleCategoryClick(cat.name)}
@@ -223,11 +227,14 @@ function CustomerDashboard() {
                   e.key === "Enter" && handleCategoryClick(cat.name)
                 }
               >
-                <div>
-                  <i className={`bi ${cat.icon}`}></i>
+                <img src={cat.img} className="card-img" alt={cat.name} />
+                <div className="card-img-overlay d-flex flex-column justify-content-end">
+                  <h6 className="card-title fw-bold">{cat.name}</h6>
+                  <span className="card-text">{cat.count} Providers</span>
+                  <p className="card-text mb-0 category-price">
+                    From {cat.price}
+                  </p>
                 </div>
-                <h6>{cat.name}</h6>
-                <span>{cat.count} Providers</span>
               </div>
             ))}
           </div>
@@ -289,69 +296,6 @@ function CustomerDashboard() {
           )}
         </section>
 
-        {/* ================= RECOMMENDED ================= */}
-        <section className="dashboard-section">
-          <div className="section-header">
-            <div>
-              <h4>Recommended Services</h4>
-              <p>Popular services near you</p>
-            </div>
-            <Link to="/services">Explore More</Link>
-          </div>
-
-          <div className="service-grid">
-            <div className="service-card ">
-              <div className="service-image">
-                <i className="bi bi-tools"></i>
-              </div>
-              <div className="service-content">
-                <span className="service-category">Home Repair</span>
-                <h5>Home Appliance Repair</h5>
-                <div className="rating">
-                  ★★★★★<span>4.8</span>
-                </div>
-                <div className="service-bottom">
-                  <strong>From ₹299</strong>
-                  <button>Book Now</button>
-                </div>
-              </div>
-            </div>
-
-            <div className="service-card">
-              <div className="service-image">
-                <i className="bi bi-house-check"></i>
-              </div>
-              <div className="service-content">
-                <span className="service-category">Cleaning</span>
-                <h5>Home Deep Cleaning</h5>
-                <div className="rating">
-                  ★★★★★<span>4.7</span>
-                </div>
-                <div className="service-bottom">
-                  <strong>From ₹499</strong>
-                  <button>Book Now</button>
-                </div>
-              </div>
-            </div>
-
-            <div className="service-card">
-              <div className="service-image">
-                <i className="bi bi-car-front"></i>
-              </div>
-              <div className="service-content">
-                <span className="service-category">Vehicle</span>
-                <h5>Car Service</h5>
-                <div className="rating">
-                  ★★★★★<span>4.9</span>
-                </div>
-                <div className="service-bottom">
-                  <strong>From ₹699</strong>
-                  <button>Book Now</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
 
       {/* ================= MOBILE SIDEBAR ================= */}
@@ -389,10 +333,6 @@ function CustomerDashboard() {
               <span>My Bookings</span>
             </Link>
 
-            <Link to="/favorites">
-              <i className="bi bi-heart"></i>
-              <span>Favorites</span>
-            </Link>
 
             <Link to="/messages">
               <i className="bi bi-chat-dots"></i>

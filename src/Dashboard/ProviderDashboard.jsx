@@ -1,12 +1,32 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Provider.css";
 
 const STATS = [
-  { label: "Total Bookings", value: 128, icon: "bi-calendar-check", color: "primary" },
-  { label: "Pending Requests", value: 6, icon: "bi-hourglass-split", color: "warning" },
-  { label: "Completed Jobs", value: 112, icon: "bi-check-circle", color: "success" },
-  { label: "Earnings (This Month)", value: "₹42,500", icon: "bi-currency-rupee", color: "info" },
+  {
+    label: "Total Bookings",
+    value: 128,
+    icon: "bi-calendar-check",
+    color: "primary",
+  },
+  {
+    label: "Pending Requests",
+    value: 6,
+    icon: "bi-hourglass-split",
+    color: "warning",
+  },
+  {
+    label: "Completed Jobs",
+    value: 112,
+    icon: "bi-check-circle",
+    color: "success",
+  },
+  {
+    label: "Earnings (This Month)",
+    value: "₹42,500",
+    icon: "bi-currency-rupee",
+    color: "info",
+  },
 ];
 
 /* =========================================================
@@ -69,9 +89,9 @@ const initialBookings = [
    ke saath start hota hai — baaki profile complete karna padta hai.
    ========================================================= */
 const initialProfile = {
-  name: "Sharma Electricals",
-  phone: "+91 98765 43210",
-  email: "sharma.electricals@example.com",
+  name: "",
+  phone: "",
+  email: "",
   photo: "",
   serviceCategory: "",
   experience: "",
@@ -102,9 +122,11 @@ const ALLOWED_DOCUMENT_FILE_TYPES = [
 ];
 const MAX_DOCUMENT_SIZE_MB = 5;
 
+// null/undefined values par crash na ho (backend se null aa sakta hai)
 const isProfileComplete = (p) =>
-  REQUIRED_PROFILE_FIELDS.every((field) => p[field] && p[field].trim() !== "") &&
-  p.documents.length > 0;
+  REQUIRED_PROFILE_FIELDS.every(
+    (field) => String(p[field] ?? "").trim() !== "",
+  ) && (p.documents?.length ?? 0) > 0;
 
 const statusBadge = (status) => {
   const map = {
@@ -117,11 +139,27 @@ const statusBadge = (status) => {
 };
 
 export default function ProviderDashboard() {
+  const navigate = useNavigate();
+
+  // Login ke time localStorage me save kiya hua provider ({ id, name, email, ... })
+  const provider = JSON.parse(localStorage.getItem("provider") || "null");
+
   const [activeTab, setActiveTab] = useState("overview");
   const [bookings, setBookings] = useState(initialBookings);
   const [selectedBooking, setSelectedBooking] = useState(null);
-  const [profile, setProfile] = useState(initialProfile);
+  const [profile, setProfile] = useState({
+    ...initialProfile,
+    name: provider?.name || "",
+    email: provider?.email || "",
+    phone: provider?.phone || "",
+    serviceCategory: provider?.category || "",
+  });
   const [sidebarOpen, setSidebarOpen] = useState(false); // mobile sidebar toggle
+
+  // Login nahi hai to wapas login page par bhejo
+  useEffect(() => {
+    if (!provider) navigate("/login/provider");
+  }, []);
 
   const pendingBookings = bookings.filter((b) => b.status === "Pending");
   const pendingCount = pendingBookings.length;
@@ -139,6 +177,12 @@ export default function ProviderDashboard() {
     setSidebarOpen(false);
   };
 
+  /* ============ LOGOUT ============ */
+  const handleLogout = () => {
+    localStorage.removeItem("provider");
+    navigate("/login/provider");
+  };
+
   /* ============ ACCEPT / REJECT HANDLERS ============ */
   const handleAccept = (id) => {
     // Safety guard — profile incomplete hone par booking accept na ho
@@ -146,7 +190,7 @@ export default function ProviderDashboard() {
     if (!profileComplete) return;
     // TODO: backend call -> PATCH /provider/bookings/:id  { status: "Confirmed" }
     setBookings((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, status: "Confirmed" } : b))
+      prev.map((b) => (b.id === id ? { ...b, status: "Confirmed" } : b)),
     );
     setSelectedBooking(null);
   };
@@ -155,10 +199,13 @@ export default function ProviderDashboard() {
     if (!profileComplete) return;
     // TODO: backend call -> PATCH /provider/bookings/:id  { status: "Cancelled" }
     setBookings((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, status: "Cancelled" } : b))
+      prev.map((b) => (b.id === id ? { ...b, status: "Cancelled" } : b)),
     );
     setSelectedBooking(null);
   };
+
+  // Bina login ke kuch render na karo (upar useEffect redirect kar dega)
+  if (!provider) return null;
 
   return (
     <div className="provider-dashboard">
@@ -192,7 +239,7 @@ export default function ProviderDashboard() {
           </button>
           <div className="provider-profile-chip">
             <i className="bi bi-person-circle"></i>
-            <span>Sharma Electricals</span>
+            <span>{profile.name || provider?.name}</span>
           </div>
         </div>
       </header>
@@ -233,14 +280,18 @@ export default function ProviderDashboard() {
               {profileComplete && pendingCount > 0 && (
                 <span className="nav-badge">{pendingCount}</span>
               )}
-              {!profileComplete && <i className="bi bi-lock-fill nav-lock-icon"></i>}
+              {!profileComplete && (
+                <i className="bi bi-lock-fill nav-lock-icon"></i>
+              )}
             </button>
             <button
               className={`nav-item ${activeTab === "services" ? "active" : ""}${!profileComplete ? " nav-item-locked" : ""}`}
               onClick={() => selectTab("services")}
             >
               <i className="bi bi-tools"></i> My Services
-              {!profileComplete && <i className="bi bi-lock-fill nav-lock-icon"></i>}
+              {!profileComplete && (
+                <i className="bi bi-lock-fill nav-lock-icon"></i>
+              )}
             </button>
             <button
               className={`nav-item ${activeTab === "profile" ? "active" : ""}`}
@@ -250,16 +301,19 @@ export default function ProviderDashboard() {
             </button>
           </nav>
 
-          <Link to="/login/provider" className="nav-item logout-item">
+          {/* Logout — localStorage clear karke login page par bhejta hai */}
+          <button className="nav-item logout-item" onClick={handleLogout}>
             <i className="bi bi-box-arrow-right"></i> Log out
-          </Link>
+          </button>
         </aside>
 
         {/* ===== Main content ===== */}
         <main className="dashboard-main">
           {activeTab === "overview" && (
             <>
-              <h1 className="dashboard-heading">Welcome back, Provider 👋</h1>
+              <h1 className="dashboard-heading">
+                Welcome back, {profile.name || "Provider"} 👋
+              </h1>
               <p className="dashboard-subtext">
                 Here's what's happening with your services today.
               </p>
@@ -286,13 +340,19 @@ export default function ProviderDashboard() {
                     <div className="d-flex align-items-center gap-3">
                       <i className="bi bi-person-exclamation complete-profile-icon"></i>
                       <div>
-                        <h2 className="section-title mb-1">Complete your profile to get started</h2>
+                        <h2 className="section-title mb-1">
+                          Complete your profile to get started
+                        </h2>
                         <p className="dashboard-subtext mb-0">
-                          Until your profile is complete, you will not be able to accept bookings or manage services.
+                          Until your profile is complete, you will not be able
+                          to accept bookings or manage services.
                         </p>
                       </div>
                     </div>
-                    <button className="btn-accept" onClick={() => selectTab("profile")}>
+                    <button
+                      className="btn-accept"
+                      onClick={() => selectTab("profile")}
+                    >
                       Complete Profile
                     </button>
                   </div>
@@ -307,14 +367,18 @@ export default function ProviderDashboard() {
                       <i className="bi bi-exclamation-circle new-request-icon"></i>
                       <div>
                         <h2 className="section-title mb-1">
-                          {pendingCount} new booking request{pendingCount > 1 ? "s" : ""}
+                          {pendingCount} new booking request
+                          {pendingCount > 1 ? "s" : ""}
                         </h2>
                         <p className="dashboard-subtext mb-0">
                           Review details and accept or reject them.
                         </p>
                       </div>
                     </div>
-                    <button className="btn-link" onClick={() => selectTab("bookings")}>
+                    <button
+                      className="btn-link"
+                      onClick={() => selectTab("bookings")}
+                    >
                       Review Now
                     </button>
                   </div>
@@ -325,7 +389,10 @@ export default function ProviderDashboard() {
               <div className="dashboard-card">
                 <div className="d-flex align-items-center justify-content-between mb-3">
                   <h2 className="section-title">Recent Bookings</h2>
-                  <button className="btn-link" onClick={() => selectTab("bookings")}>
+                  <button
+                    className="btn-link"
+                    onClick={() => selectTab("bookings")}
+                  >
                     View all
                   </button>
                 </div>
@@ -338,116 +405,127 @@ export default function ProviderDashboard() {
             </>
           )}
 
-          {activeTab === "bookings" && (
-            profileComplete ? (
-            <>
-              <h1 className="dashboard-heading">Bookings</h1>
-              <p className="dashboard-subtext">
-                {pendingCount > 0
-                  ? `${pendingCount} request${pendingCount > 1 ? "s" : ""} waiting for your response`
-                  : "No pending requests right now"}
-              </p>
+          {activeTab === "bookings" &&
+            (profileComplete ? (
+              <>
+                <h1 className="dashboard-heading">Bookings</h1>
+                <p className="dashboard-subtext">
+                  {pendingCount > 0
+                    ? `${pendingCount} request${pendingCount > 1 ? "s" : ""} waiting for your response`
+                    : "No pending requests right now"}
+                </p>
 
-              {/* Pending requests — full details, highlighted */}
-              {pendingBookings.length > 0 && (
-                <div className="dashboard-card">
-                  <h2 className="section-title mb-3">New Requests</h2>
+                {/* Pending requests — full details, highlighted */}
+                {pendingBookings.length > 0 && (
+                  <div className="dashboard-card">
+                    <h2 className="section-title mb-3">New Requests</h2>
 
-                  <div className="request-list">
-                    {pendingBookings.map((b) => (
-                      <div className="request-item" key={b.id}>
-                        <div className="request-item-main">
-                          <div className="d-flex align-items-center justify-content-between mb-2">
-                            <h3 className="request-customer">{b.customer}</h3>
-                            <span className={`badge ${statusBadge(b.status)}`}>
-                              {b.status}
-                            </span>
+                    <div className="request-list">
+                      {pendingBookings.map((b) => (
+                        <div className="request-item" key={b.id}>
+                          <div className="request-item-main">
+                            <div className="d-flex align-items-center justify-content-between mb-2">
+                              <h3 className="request-customer">{b.customer}</h3>
+                              <span
+                                className={`badge ${statusBadge(b.status)}`}
+                              >
+                                {b.status}
+                              </span>
+                            </div>
+                            <p className="request-line">
+                              <i className="bi bi-tools"></i> {b.service}
+                            </p>
+                            <p className="request-line">
+                              <i className="bi bi-calendar-event"></i> {b.date}{" "}
+                              · {b.time}
+                            </p>
+                            <p className="request-line">
+                              <i className="bi bi-geo-alt"></i> {b.address}
+                            </p>
+                            {b.notes && (
+                              <p className="request-notes">"{b.notes}"</p>
+                            )}
                           </div>
-                          <p className="request-line">
-                            <i className="bi bi-tools"></i> {b.service}
-                          </p>
-                          <p className="request-line">
-                            <i className="bi bi-calendar-event"></i> {b.date} · {b.time}
-                          </p>
-                          <p className="request-line">
-                            <i className="bi bi-geo-alt"></i> {b.address}
-                          </p>
-                          {b.notes && (
-                            <p className="request-notes">"{b.notes}"</p>
-                          )}
-                        </div>
 
-                        <div className="request-item-actions">
-                          <button
-                            className="btn-action-outline"
-                            onClick={() => setSelectedBooking(b)}
-                          >
-                            <i className="bi bi-eye"></i> View
-                          </button>
-                          <button
-                            className="btn-accept"
-                            onClick={() => handleAccept(b.id)}
-                          >
-                            <i className="bi bi-check-lg"></i> Accept
-                          </button>
-                          <button
-                            className="btn-reject"
-                            onClick={() => handleReject(b.id)}
-                          >
-                            <i className="bi bi-x-lg"></i> Reject
-                          </button>
+                          <div className="request-item-actions">
+                            <button
+                              className="btn-action-outline"
+                              onClick={() => setSelectedBooking(b)}
+                            >
+                              <i className="bi bi-eye"></i> View
+                            </button>
+                            <button
+                              className="btn-accept"
+                              onClick={() => handleAccept(b.id)}
+                            >
+                              <i className="bi bi-check-lg"></i> Accept
+                            </button>
+                            <button
+                              className="btn-reject"
+                              onClick={() => handleReject(b.id)}
+                            >
+                              <i className="bi bi-x-lg"></i> Reject
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* All bookings table */}
-              <div className="dashboard-card">
-                <h2 className="section-title mb-3">All Bookings</h2>
-                <BookingsTable bookings={bookings} onView={setSelectedBooking} />
-              </div>
-            </>
+                {/* All bookings table */}
+                <div className="dashboard-card">
+                  <h2 className="section-title mb-3">All Bookings</h2>
+                  <BookingsTable
+                    bookings={bookings}
+                    onView={setSelectedBooking}
+                  />
+                </div>
+              </>
             ) : (
               <ProfileRequiredNotice
                 heading="Complete your profile to view bookings"
                 text="Customers can only book providers with complete profiles. Please complete your profile to receive bookings."
                 onGoToProfile={() => selectTab("profile")}
               />
-            )
-          )}
+            ))}
 
-          {activeTab === "services" && (
-            profileComplete ? (
-            <>
-              <h1 className="dashboard-heading">My Services</h1>
-              <p className="dashboard-subtext">Manage the services you offer.</p>
-              <div className="dashboard-card">
-                <p className="dashboard-subtext mb-0">The services list will appear here.</p>
-              </div>
-            </>
+          {activeTab === "services" &&
+            (profileComplete ? (
+              <>
+                <h1 className="dashboard-heading">My Services</h1>
+                <p className="dashboard-subtext">
+                  Manage the services you offer.
+                </p>
+                <div className="dashboard-card">
+                  <p className="dashboard-subtext mb-0">
+                    The services list will appear here.
+                  </p>
+                </div>
+              </>
             ) : (
               <ProfileRequiredNotice
                 heading="Complete your profile to manage services"
                 text="Please complete your profile first to add services."
                 onGoToProfile={() => selectTab("profile")}
               />
-            )
-          )}
+            ))}
 
           {activeTab === "profile" && (
             <>
               <h1 className="dashboard-heading">My Profile</h1>
               <p className="dashboard-subtext">
-                These details will be visible to customers and the admin. Keep them accurate and complete.
+                These details will be visible to customers and the admin. Keep
+                them accurate and complete.
               </p>
 
               {!profileComplete && (
                 <div className="profile-incomplete-note">
                   <i className="bi bi-exclamation-triangle-fill"></i>
-                  Your profile is incomplete. Until you provide all the required details (name, phone, email, 
-                  service category, experience, address, and at least 1 document) are provided, otherwise you cannot accept bookings.
+                  Your profile is incomplete. Until you provide all the required
+                  details (name, phone, email, service category, experience,
+                  address, and at least 1 document) are provided, otherwise you
+                  cannot accept bookings.
                 </div>
               )}
 
@@ -565,7 +643,9 @@ function BookingDetailModal({ booking, onClose, onAccept, onReject }) {
             </div>
             <div>
               <small className="dashboard-subtext d-block">Date & Time</small>
-              <span>{booking.date} · {booking.time}</span>
+              <span>
+                {booking.date} · {booking.time}
+              </span>
             </div>
             <div>
               <small className="dashboard-subtext d-block">Address</small>
@@ -575,7 +655,9 @@ function BookingDetailModal({ booking, onClose, onAccept, onReject }) {
 
           {booking.notes && (
             <div className="mt-3">
-              <small className="dashboard-subtext d-block">Customer Notes</small>
+              <small className="dashboard-subtext d-block">
+                Customer Notes
+              </small>
               <p className="request-notes mb-0">"{booking.notes}"</p>
             </div>
           )}
@@ -616,7 +698,7 @@ function ProviderProfileForm({ profile, onSave }) {
 
   const uploadedDocTypes = form.documents.map((d) => d.type);
   const availableDocTypes = ALLOWED_DOCUMENT_TYPES.filter(
-    (t) => !uploadedDocTypes.includes(t)
+    (t) => !uploadedDocTypes.includes(t),
   );
   const [docType, setDocType] = useState(availableDocTypes[0] || "");
 
@@ -641,7 +723,9 @@ function ProviderProfileForm({ profile, onSave }) {
 
     // Sirf Aadhaar / PAN / Passport allowed — koi dusra type nahi
     if (!ALLOWED_DOCUMENT_TYPES.includes(docType)) {
-      setDocError("You can only upload an Aadhaar Card, PAN Card, or Passport.");
+      setDocError(
+        "You can only upload an Aadhaar Card, PAN Card, or Passport.",
+      );
       e.target.value = "";
       return;
     }
@@ -662,7 +746,9 @@ function ProviderProfileForm({ profile, onSave }) {
 
     // File size limit
     if (file.size > MAX_DOCUMENT_SIZE_MB * 1024 * 1024) {
-      setDocError(`File size ${MAX_DOCUMENT_SIZE_MB}It should be less than MB.`);
+      setDocError(
+        `File size ${MAX_DOCUMENT_SIZE_MB}It should be less than MB.`,
+      );
       e.target.value = "";
       return;
     }
@@ -707,7 +793,11 @@ function ProviderProfileForm({ profile, onSave }) {
       <div className="dashboard-card profile-card">
         <div className="profile-view-header">
           {profile.photo ? (
-            <img src={profile.photo} alt={profile.name} className="profile-photo" />
+            <img
+              src={profile.photo}
+              alt={profile.name}
+              className="profile-photo"
+            />
           ) : (
             <div className="profile-photo-placeholder">
               <i className="bi bi-person-fill"></i>
@@ -716,10 +806,14 @@ function ProviderProfileForm({ profile, onSave }) {
           <div>
             <h2 className="section-title mb-1">{profile.name}</h2>
             <p className="dashboard-subtext mb-0">
-              {profile.serviceCategory || "Service category not set"} · {profile.experience || "Experience not set"}
+              {profile.serviceCategory || "Service category not set"} ·{" "}
+              {profile.experience || "Experience not set"}
             </p>
           </div>
-          <button className="btn-accept ms-auto" onClick={() => setEditing(true)}>
+          <button
+            className="btn-accept ms-auto"
+            onClick={() => setEditing(true)}
+          >
             <i className="bi bi-pencil"></i> Edit Profile
           </button>
         </div>
@@ -734,7 +828,9 @@ function ProviderProfileForm({ profile, onSave }) {
             <span>{profile.email}</span>
           </div>
           <div>
-            <small className="dashboard-subtext d-block">Service Category</small>
+            <small className="dashboard-subtext d-block">
+              Service Category
+            </small>
             <span>{profile.serviceCategory}</span>
           </div>
           <div>
@@ -754,15 +850,21 @@ function ProviderProfileForm({ profile, onSave }) {
         </div>
 
         <div className="mt-3">
-          <small className="dashboard-subtext d-block mb-2">Identity Documents</small>
+          <small className="dashboard-subtext d-block mb-2">
+            Identity Documents
+          </small>
           <div className="d-flex flex-column gap-2">
             {profile.documents.length === 0 && (
-              <span className="dashboard-subtext">No document has been uploaded.</span>
+              <span className="dashboard-subtext">
+                No document has been uploaded.
+              </span>
             )}
             {profile.documents.map((doc, i) => (
               <div key={i} className="doc-row">
                 <i className="bi bi-file-earmark-text"></i>
-                <span><strong>{doc.type}</strong> — {doc.name}</span>
+                <span>
+                  <strong>{doc.type}</strong> — {doc.name}
+                </span>
               </div>
             ))}
           </div>
@@ -785,7 +887,12 @@ function ProviderProfileForm({ profile, onSave }) {
           )}
           <label className="photo-upload-btn">
             <i className="bi bi-camera"></i>
-            <input type="file" accept="image/*" onChange={handlePhotoChange} hidden />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoChange}
+              hidden
+            />
           </label>
         </div>
         <div>
@@ -873,7 +980,9 @@ function ProviderProfileForm({ profile, onSave }) {
 
         <div className="d-flex flex-column gap-2 mb-2">
           {form.documents.length === 0 && (
-            <span className="dashboard-subtext">No document has been uploaded.</span>
+            <span className="dashboard-subtext">
+              No document has been uploaded.
+            </span>
           )}
           {form.documents.map((doc, i) => (
             <div key={i} className="doc-row">
@@ -901,7 +1010,9 @@ function ProviderProfileForm({ profile, onSave }) {
               onChange={(e) => setDocType(e.target.value)}
             >
               {availableDocTypes.map((t) => (
-                <option key={t} value={t}>{t}</option>
+                <option key={t} value={t}>
+                  {t}
+                </option>
               ))}
             </select>
             <label className="upload-docs-btn">
@@ -923,7 +1034,8 @@ function ProviderProfileForm({ profile, onSave }) {
         {docError && <p className="doc-error">{docError}</p>}
 
         <small className="doc-hint d-block mt-2">
-          Only Aadhaar Card, PAN Card, or Passport will be accepted — JPG, PNG, or PDF, max {MAX_DOCUMENT_SIZE_MB}MB, only one of each type.
+          Only Aadhaar Card, PAN Card, or Passport will be accepted — JPG, PNG,
+          or PDF, max {MAX_DOCUMENT_SIZE_MB}MB, only one of each type.
         </small>
       </div>
 
@@ -931,7 +1043,11 @@ function ProviderProfileForm({ profile, onSave }) {
         <button type="submit" className="btn-accept">
           <i className="bi bi-check-lg"></i> Save Profile
         </button>
-        <button type="button" className="btn-action-outline" onClick={handleCancel}>
+        <button
+          type="button"
+          className="btn-action-outline"
+          onClick={handleCancel}
+        >
           Cancel
         </button>
       </div>
